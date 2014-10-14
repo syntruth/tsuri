@@ -53,7 +53,7 @@ that node in the tree structure. By default, these are dash-separated numbers.
     // => root
     //    child-1
     //    child-2
-    >>    grandchild-1
+    //    grandchild-1
 
 *Note:* Within the iterator function, the value of `this` is set to the current node
 being traversed. So, the iterator could have been written as:
