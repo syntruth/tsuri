@@ -102,11 +102,12 @@ be returned.
 **hasChildren**() => Boolean  
 Returns true if the given node has children, false otherwise.
 
+**isLeaf**() => Boolean  
+Will return if this node is a leaf or not; that is, if it has any children
+or not.
+
 **isRoot**() => Boolean  
 Will return if the node this is called on is the root of the tree or not.
-
-**length**() => Integer  
-This will return how many nodes are in the node this is called on.
 
 **path**(path, separator = '/') => Tsuri instances or null  
 Finds a node based on a string path of children indexes, separated by the optional
@@ -141,6 +142,10 @@ position of the node within its parents children array.
 **siblings**() => [Tsuri instances] or []  
 This will return an array of nodes that are siblings of the node that this is
 called on, or if this node has no siblings, an empty array.
+
+**size**() => Integer  
+This will return how many nodes are in the (sub)tree of this node, including
+this node.
 
 **toArray**() => [Tsuri instances]  
 This will return a flat array of all the nodes, starting with the root node. Nodes

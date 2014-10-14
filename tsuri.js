@@ -27,16 +27,20 @@
       return match;
     };
 
-    Tsuri.prototype.isRoot = function() {
-      if (this.parent) {
+    Tsuri.prototype.isLeaf = function() {
+      if (this.hasChildren()) {
         return false;
       } else {
         return true;
       }
     };
 
-    Tsuri.prototype.length = function() {
-      return this.toArray().length;
+    Tsuri.prototype.isRoot = function() {
+      if (this.parent) {
+        return false;
+      } else {
+        return true;
+      }
     };
 
     Tsuri.prototype.path = function(path, separator) {
@@ -94,6 +98,10 @@
         }
         return _results;
       }).call(this);
+    };
+
+    Tsuri.prototype.size = function() {
+      return this.toArray().length;
     };
 
     Tsuri.prototype.appendChild = function(data, id) {
@@ -164,10 +172,9 @@
         id = node.id;
         returned = null;
         if (!(visited.indexOf(id) > -1)) {
-          returned = iterator.call(node, node);
           visited.push(id);
-          if (returned === false) {
-            return returned;
+          if (iterator.call(node, node) === false) {
+            return false;
           }
         }
       };

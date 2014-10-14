@@ -19,9 +19,9 @@ class Tsuri
 
     return match
 
-  isRoot: () -> if @parent then false else true
+  isLeaf: () -> if this.hasChildren() then false else true
 
-  length: () -> this.toArray().length
+  isRoot: () -> if @parent then false else true
 
   path: (path, separator = '/') ->
     path    = path.substring(1) if path[0] is separator
@@ -53,6 +53,8 @@ class Tsuri
     return [] if this.isRoot()
 
     return (child for child in @parent.children when child.id isnt @id)
+
+  size: () -> this.toArray().length
 
   ####################
   # Children Methods #
@@ -126,10 +128,8 @@ class Tsuri
       returned = null
 
       unless visited.indexOf(id) > -1
-        returned = iterator.call node, node
         visited.push id
-
-        return returned if returned is false
+        return false if iterator.call(node, node) is false
 
     callback context, callIterator
 
