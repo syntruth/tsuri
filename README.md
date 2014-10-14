@@ -39,7 +39,7 @@ array within that object; by default, the children attribute string is simply
       ]
     };
 
-   tree = Tsuri.parse(json);
+    tree = Tsuri.parse(json);
 
 Each node within the tree is given an ID string, representing the depth and index of
 that node in the tree structure. By default, these are dash-separated numbers.
