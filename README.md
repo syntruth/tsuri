@@ -69,7 +69,18 @@ This will append the data as a new Tsuri node to the node object this is called 
 An optional `id` value can be passed as the ID of the new node, otherwise, the default
 node ID will be assigned.
 
-**each**(iterator) -> Tsuri instance  
+**breadthEach**(iterator) -> null  
+This will traverse the tree, starting at the node that this was called on, doing a
+breadth-first, left-to-right traversal of the subtree.
+
+    tree.breadthEach(function(node) { console.info(node.data.name); })
+
+    // => root
+    //    child-1
+    //    child-2
+    //    grandchild-1
+
+**each**(iterator) -> null  
 This is a synonym for traverseDown() below.
 
 **find**(finder) -> Tsuri instance or null  
@@ -88,6 +99,9 @@ The finder function should return true or false on if the node matches what you 
 looking for in the tree. If found, the node will be returned, otherwise null will
 be returned.
 
+**hasChildren**() -> Boolean  
+Returns true if the given node has children, false otherwise.
+
 **isRoot**() -> Boolean  
 Will return if the node this is called on is the root of the tree or not.
 
@@ -100,8 +114,10 @@ separator string, which defaults to '/'. In other words, using the above JSON da
 from the tree root, the path to the `grandchild-1` node would be: 1/0, where 1 is
 the 2nd child of the root node, and 0 is the 1st child of the `child-2` node.
 
-**hasChildren**() -> Boolean  
-Returns true if the given node has children, false otherwise.
+**postOrderEach(iterator) -> null  
+This traverses the tree, starting with the node this was called on, in post-ordered,
+order. That is, leafs at the end of each branch is iterator first, with this node,
+or root, being the last node iterated.
 
 **remove**() -> Tsuri instance or null  
 This will remove the node that that is called upon from its parent node. It will

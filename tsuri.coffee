@@ -6,8 +6,6 @@ class Tsuri
     @id       = id or this._nodeId(@parent)
     @children = []
 
-  each: (iterator) -> this.traverseDown iterator
-
   find: (finder) ->
     match = null
 
@@ -79,15 +77,27 @@ class Tsuri
   # Traversal Methods #
   #####################
 
-  traverseUp: (iterator) ->
-    this._traverse this, iterator, this._traverseUp
+  breadthEach: (iterator) ->
+    this._traverse this, iterator, this._breadthEach
 
-    return this
+    return
+
+  each: (iterator) -> this.traverseDown iterator
+
+  postOrderEach: (iterator) ->
+    this._traverse this, iterator, this._postOrderEach
+
+    return
 
   traverseDown: (iterator) ->
     this._traverse this, iterator, this._traverseDown
 
-    return this
+    return
+
+  traverseUp: (iterator) ->
+    this._traverse this, iterator, this._traverseUp
+
+    return
 
   ######################
   # Conversion Methods #
@@ -107,6 +117,23 @@ class Tsuri
   ###################
 
   _defaultFinder: (node, id) -> if node.id is id then true else false
+
+  _traverse: (context, iterator, callback) ->
+    visited = []
+
+    callIterator = (node) ->
+      id       = node.id
+      returned = null
+
+      unless visited.indexOf(id) > -1
+        returned = iterator.call node, node
+        visited.push id
+
+        return returned if returned is false
+
+    callback context, callIterator
+
+    return
 
   _traverseDown: (context, iterator) ->
     doContinue = true
@@ -137,20 +164,36 @@ class Tsuri
 
     return
 
-  _traverse: (context, iterator, callback) ->
-    visited = []
+  _breadthEach: (context, iterator) ->
+    queue = [context]
 
-    callIterator = (node) ->
-      id       = node.id
-      returned = null
+    until queue.length is 0
+      node = queue.shift()
 
-      unless visited.indexOf(id) > -1
-        returned = iterator.call node, node
-        visited.push id
+      return if iterator.call(node, node) is false
 
-        return returned if returned is false
+      queue.push child for child in node.children
 
-    callback context, callIterator
+    return
+
+  _postOrderEach: (context, iterator) ->
+    nodes = [{node: context, visited: false}]
+
+    while nodes.length > 0
+      peek = nodes[0]
+
+      if peek.node.children.length > 0 and not peek.visited
+        peek.visited = true
+        children     = []
+
+        for child in peek.node.children
+          children.push({node: child, visited: false})
+
+        nodes = children.concat nodes
+      else
+        node = nodes.shift().node
+
+        return if iterator(node) is false
 
     return
 
