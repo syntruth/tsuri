@@ -174,13 +174,13 @@
     Tsuri.prototype._traverseUp = function(context, iterator) {
       var child, _i, _len, _ref;
       while (context) {
-        if (iterator(context) !== false) {
+        if (iterator(context) === false) {
           return;
         }
         _ref = context.children;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           child = _ref[_i];
-          if (iterator(child) !== false) {
+          if (iterator(child) === false) {
             return;
           }
         }
@@ -214,8 +214,7 @@
       for (idx = _i = 0, _len = _ref.length; _i < _len; idx = ++_i) {
         child = _ref[idx];
         if (child === node) {
-          value = child;
-          parent.children.splice(idx, 1).shift();
+          value = parent.children.splice(idx, 1).shift();
         }
       }
       return value;

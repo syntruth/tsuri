@@ -128,10 +128,10 @@ class Tsuri
 
   _traverseUp: (context, iterator) ->
     while context
-      return unless iterator(context) is false
+      return if iterator(context) is false
 
       for child in context.children
-        return unless iterator(child) is false
+        return if iterator(child) is false
 
       context = context.parent
 
@@ -159,9 +159,7 @@ class Tsuri
     value  = null
 
     for child, idx in parent.children
-      if child is node
-        value = child
-        parent.children.splice(idx, 1).shift()
+      value = parent.children.splice(idx, 1).shift() if child is node
 
     return value
 

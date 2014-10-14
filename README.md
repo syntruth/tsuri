@@ -78,6 +78,12 @@ argument is a function with the following signature:
 
     function finder(node) { ... }
 
+Example:
+
+    var node = tree.find(function(node) {
+      return node.data.name === 'grandchild-1';
+    });
+
 The finder function should return true or false on if the node matches what you are
 looking for in the tree. If found, the node will be returned, otherwise null will
 be returned.
@@ -128,7 +134,25 @@ This returns a string representation of the tree, with the IDs listed for each n
     //     |--> 0-1
     //          |--> 0-1-0
 
-**traverseUp**(iterator)   
+**traverseUp**(iterator) -> null   
+This will traverse updward from the given node, feeding the iterator function each
+node in turn. Each node will be visited, after the root node is reached.
 
-**traverseDown**(iterator)  
+    node.traverseUp(function(node) { console.info(node.data.name); return true})
+
+    // => grandchild-1
+    //    child-2
+    //    root
+    //    child-1
+
+**traverseDown**(iterator) -> null  
+This will traverse downward from the given now, feeding the iterator function each
+node in turn. This is a depth-first traversal.
+
+    tree.traverseDown(function(node) { console.info(node.data.name); })
+
+    // => root
+    //    child-1
+    //    child-2
+    //    grandchild-1
 
