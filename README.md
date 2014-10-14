@@ -114,7 +114,7 @@ separator string, which defaults to '/'. In other words, using the above JSON da
 from the tree root, the path to the `grandchild-1` node would be: 1/0, where 1 is
 the 2nd child of the root node, and 0 is the 1st child of the `child-2` node.
 
-**postOrderEach(iterator) -> null  
+**postOrderEach**(iterator) -> null  
 This traverses the tree, starting with the node this was called on, in post-ordered,
 order. That is, leafs at the end of each branch is iterator first, with this node,
 or root, being the last node iterated.
