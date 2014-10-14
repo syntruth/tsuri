@@ -119,6 +119,13 @@ This traverses the tree, starting with the node this was called on, in post-orde
 order. That is, leafs at the end of each branch is iterator first, with this node,
 or root, being the last node iterated.
 
+    tree.postOrderEach(function(node) { console.info(node.data.name); })
+
+    // => child-1
+    //    grandchild-1
+    //    child-2
+    //    root
+
 **remove**() -> Tsuri instance or null  
 This will remove the node that that is called upon from its parent node. It will
 return the removed node, or null if the node has no parent.
