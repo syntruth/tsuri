@@ -25,17 +25,18 @@ class Tsuri
 
   length: () -> this.toArray().length
 
-  path: (path, separator = '-') ->
+  path: (path, separator = '/') ->
     path    = path.substring(1) if path[0] is separator
-    parts   = path.split separator
+    indexes = path.split separator
     context = this
 
-    for part in parts
-      index   = parseInt part, 10
-      context = if context.children.length? > index
-                  context.children[index]
-                else
-                  null
+    for index in indexes
+      index = parseInt index, 10
+
+      if context?.children?.length > index
+        context = context.children[index]
+      else
+        context = null
 
     return context
 
@@ -60,9 +61,7 @@ class Tsuri
   ####################
 
   appendChild: (data, id) ->
-    child = new Tsuri this, data, id
-
-    @children.push child
+    @children.push new Tsuri(this, data, id)
 
     return this
 
