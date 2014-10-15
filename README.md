@@ -48,6 +48,11 @@ that node in the tree structure. By default, these are dash-separated numbers.
 
 ## Traversal
 
+Tsuri provides several methods of traversing the tree structure. The most straight
+forward of which is `each()` (or `traverseDown` which are the same). Each of the
+traversing methods takes an iterator function, which will be provided the node as
+the sole argument:
+
     function iterator(node) { console.info(node.data.name); }
 
     // => root
@@ -59,6 +64,18 @@ that node in the tree structure. By default, these are dash-separated numbers.
 being traversed. So, the iterator could have been written as:
 
     functon iterator() { console.info(this.data.name); }
+
+The following are the traversal methods:
+
+- `each()`/`traverseDown()`: Traverses from a given node down the tree, in a
+  left-to-right fashion.
+- `traverseUp()`: Traverses from a given node back up the tree, and then down
+  again once the root node has been reached, in a left-to-right fashion.
+- `breadthEach()`: Traverses the tree in a left-to-right, top-to-bottom fashion.
+- `postOrderEach()`: Traveres the tree from the leafs updwards towards the root,
+  so leaves are iterated before their parents.
+
+See each method below for an example.
 
 ## Methods
 
