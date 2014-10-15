@@ -191,7 +191,7 @@ This returns a string representation of the tree, with the IDs listed for each n
 This will traverse updward from the given node, feeding the iterator function each
 node in turn. Each node will be visited, after the root node is reached.
 
-    node.traverseUp(function(node) { console.info(node.data.name); return true})
+    node.traverseUp(function(node) { console.info(node.data.name); })
 
     // => grandchild-1
     //    child-2
