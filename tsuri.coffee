@@ -32,9 +32,9 @@ class Tsuri
     @children = []
 
   find: (finder) ->
-    match = null
+    return null unless typeof finder is 'function'
 
-    finder = this._defaultFinder if typeof finder isnt 'function'
+    match = null
 
     this.traverseDown (node) ->
       if finder.call this, node
@@ -160,9 +160,6 @@ class Tsuri
   ###################
   # Private Methods #
   ###################
-
-  _defaultFinder: (node, id) -> if node.id is id then true else false
-
   _defaultDataHandler: (node) -> node.data
 
   _traverse: (context, iterator, callback) ->

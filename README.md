@@ -114,7 +114,7 @@ Example:
 
 The finder function should return true or false on if the node matches what you are
 looking for in the tree. If found, the node will be returned, otherwise null will
-be returned.
+be returned. If no finder function is given, then null is returned.
 
 `hasChildren()` => Boolean  
 Returns true if the given node has children, false otherwise.

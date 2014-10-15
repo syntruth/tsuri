@@ -41,10 +41,10 @@ VERSION: 1.0.0
 
     Tsuri.prototype.find = function(finder) {
       var match;
-      match = null;
       if (typeof finder !== 'function') {
-        finder = this._defaultFinder;
+        return null;
       }
+      match = null;
       this.traverseDown(function(node) {
         if (finder.call(this, node)) {
           match = node;
@@ -208,14 +208,6 @@ VERSION: 1.0.0
         return data;
       };
       return walkDown(this);
-    };
-
-    Tsuri.prototype._defaultFinder = function(node, id) {
-      if (node.id === id) {
-        return true;
-      } else {
-        return false;
-      }
     };
 
     Tsuri.prototype._defaultDataHandler = function(node) {
