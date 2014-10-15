@@ -152,6 +152,14 @@ This will return a flat array of all the nodes, starting with the root node. Nod
 higher up in the tree are towards the front of the array, and thus those lower down
 in the tree are towards the end of the array.
 
+**toJSON**(childrenAttr, dataHandler) => Object  
+This will return an JSON object representation of the tree; it is sort of the
+opposite of Tsuri.parse(). The `childrenAttr` tells the method what attribute
+to use for the children array, and defaults to 'children'. The dataHandler is an
+optional function so you can massage how the data is returned. This function
+*_must_* return an Object. If left undefined, a default data handler is used which
+simply returns node.data.
+
 **toString**() => String  
 This returns a string representation of the tree, with the IDs listed for each node.
 

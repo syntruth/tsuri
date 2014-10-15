@@ -1,3 +1,28 @@
+###
+The MIT License (MIT)
+Copyright © 2014 Randy Carnahan
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the “Software”), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.</p>
+
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+VERSION: 0.1.0
+###
+
 class Tsuri
   constructor: (parent, data, id) ->
     @parent   = parent or null
@@ -114,11 +139,31 @@ class Tsuri
 
   toString: () -> this._toStringArray(this).join('\n')
 
+  toJSON: (childrenAttr = 'children', dataHandler) ->
+    unless typeof dataHandler is 'function'
+      dataHandler = this._defaultDataHandler
+
+    walkDown = (node, parent) ->
+      data = dataHandler node
+
+      parent[childrenAttr].push data if parent
+
+      if node.hasChildren()
+        data[childrenAttr] = []
+
+        walkDown child, data for child in node.children
+
+      return data
+
+    walkDown this
+
   ###################
   # Private Methods #
   ###################
 
   _defaultFinder: (node, id) -> if node.id is id then true else false
+
+  _defaultDataHandler: (node) -> node.data
 
   _traverse: (context, iterator, callback) ->
     visited = []
