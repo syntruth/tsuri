@@ -11,18 +11,18 @@ I decided to add some new methods to make traversal more complete, much of which
 inspired by the RubyTree gem.
 
 ### Added
-- hasChildren()
-- siblings()
-- isLeaf()
-- size()
-- each()
-- breadthEach()
-- postOrderEach()
-- toJSON()
+- `hasChildren()`
+- `siblings()`
+- `isLeaf()`
+- `size()`
+- `each()`
+- `breadthEach()`
+- `postOrderEach()`
+- `toJSON()`
 
 ### Changed
-- find() no longer searches for an ID if no finder method if given.
+- `find()` method no longer searches for an ID if no finder method if given.
 
 ### Removed
 - `length` propery, since `__defineGetter__` is not a standard JavaScript
-  construct. There is now the size() method to be used instead.
+  construct. There is now the `size()` method to be used instead.
