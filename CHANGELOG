@@ -14,6 +14,7 @@ inspired by the RubyTree gem.
 - hasChildren()
 - siblings()
 - isLeaf()
+- size()
 - each()
 - breadthEach()
 - postOrderEach()
@@ -24,4 +25,4 @@ inspired by the RubyTree gem.
 
 ### Removed
 - `length` propery, since `__defineGetter__` is not a standard JavaScript
-  construct.
+  construct. There is now the size() method to be used instead.
