@@ -117,7 +117,7 @@ the 2nd child of the root node, and 0 is the 1st child of the `child-2` node.
 
 **postOrderEach**(iterator) => null  
 This traverses the tree, starting with the node this was called on, in post-ordered,
-order. That is, leafs at the end of each branch is iterator first, with this node,
+order. That is, leafs at the end of each branch is iterated first, with this node,
 or root, being the last node iterated.
 
     tree.postOrderEach(function(node) { console.info(node.data.name); })
@@ -153,7 +153,7 @@ higher up in the tree are towards the front of the array, and thus those lower d
 in the tree are towards the end of the array.
 
 **toJSON**(childrenAttr, dataHandler) => Object  
-This will return an JSON object representation of the tree; it is sort of the
+This will return a JSON object representation of the tree; it is sort of the
 opposite of Tsuri.parse(). The `childrenAttr` tells the method what attribute
 to use for the children array, and defaults to 'children'. The dataHandler is an
 optional function so you can massage how the data is returned. This function
@@ -166,9 +166,9 @@ This returns a string representation of the tree, with the IDs listed for each n
     tree.toString()
 
     // => 0
-    //     |-=> 0-0
-    //     |-=> 0-1
-    //          |-=> 0-1-0
+    //     |--> 0-0
+    //     |--> 0-1
+    //          |--> 0-1-0
 
 **traverseUp**(iterator) => null   
 This will traverse updward from the given node, feeding the iterator function each
@@ -182,8 +182,8 @@ node in turn. Each node will be visited, after the root node is reached.
     //    child-1
 
 **traverseDown**(iterator) => null  
-This will traverse downward from the given now, feeding the iterator function each
-node in turn. This is a depth-first traversal.
+This will traverse downward from the given node, feeding the iterator function each
+node in turn. This is a depth-first, left-to-right traversal.
 
     tree.traverseDown(function(node) { console.info(node.data.name); })
 
