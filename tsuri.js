@@ -22,7 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
-VERSION: 1.0.0
+VERSION: 1.1.0
 */
 
 
@@ -37,6 +37,9 @@ VERSION: 1.0.0
       this.data = data || {};
       this.id = id || this._nodeId(this.parent);
       this.children = [];
+      if (this.parent) {
+        this.parent.children.push(this);
+      }
     }
 
     Tsuri.prototype.find = function(finder) {
@@ -101,7 +104,7 @@ VERSION: 1.0.0
       if (this.isRoot()) {
         return this;
       }
-      node = this;
+      node = this.parent;
       while (node.parent) {
         node = node.parent;
       }
@@ -109,22 +112,19 @@ VERSION: 1.0.0
     };
 
     Tsuri.prototype.siblings = function() {
-      var child;
+      var child, _i, _len, _ref, _results;
       if (this.isRoot()) {
         return [];
       }
-      return (function() {
-        var _i, _len, _ref, _results;
-        _ref = this.parent.children;
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          child = _ref[_i];
-          if (child.id !== this.id) {
-            _results.push(child);
-          }
+      _ref = this.parent.children;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        child = _ref[_i];
+        if (child.id !== this.id) {
+          _results.push(child);
         }
-        return _results;
-      }).call(this);
+      }
+      return _results;
     };
 
     Tsuri.prototype.size = function() {
@@ -132,7 +132,7 @@ VERSION: 1.0.0
     };
 
     Tsuri.prototype.appendChild = function(data, id) {
-      this.children.push(new Tsuri(this, data, id));
+      new Tsuri(this, data, id);
       return this;
     };
 
@@ -404,7 +404,6 @@ VERSION: 1.0.0
       data = Tsuri.nodeData(node, childrenAttr);
       if (parent) {
         newNode = new Tsuri(parent, data);
-        parent.children.push(newNode);
       } else {
         newNode = new Tsuri(null, data);
         root = newNode;

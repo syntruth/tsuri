@@ -55,11 +55,6 @@ the sole argument:
 
     function iterator(node) { console.info(node.data.name); }
 
-    // => root
-    //    child-1
-    //    child-2
-    //    grandchild-1
-
 *Note:* Within the iterator function, the value of `this` is set to the current node
 being traversed. So, the iterator could have been written as:
 
@@ -72,7 +67,7 @@ The following are the traversal methods:
 - `traverseUp()`: Traverses from a given node back up the tree, and then down
   again once the root node has been reached, in a left-to-right fashion.
 - `breadthEach()`: Traverses the tree in a left-to-right, top-to-bottom fashion.
-- `postOrderEach()`: Traveres the tree from the leafs updwards towards the root,
+- `postOrderEach()`: Traveres the tree from the leafs upwards towards the root,
   so leaves are iterated before their parents.
 
 See each method below for an example.

@@ -1,5 +1,19 @@
 # Tsuri Change Log
 
+## Unreleased
+
+## 1.1.0 - 2014-10-21
+
+### Changed
+- Updated `Tsuri.parse()` fort he change to the constructor and `appendChild()`.
+- `appendChild()` no longer directly adds the new child node to the parent, as that
+  is now handled in the constructor.
+- Changed the constructor to add the intializing node to the `parent` node if it's
+  not null.
+- `root()` is a _teensy weensy_ bit more optimized, where if the called node isn't
+  root, then it starts with that node's parent instead of with that node.
+- Removed the extraneous return statement from `siblings()` in the coffee version.
+
 ## 1.0.0 - 2014-10-15
 
 'Forked' Arboreal, which really meant rewriting the entire thing in CoffeeScript.

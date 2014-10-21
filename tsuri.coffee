@@ -20,7 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
-VERSION: 1.0.0
+VERSION: 1.1.0
 ###
 
 class Tsuri
@@ -30,6 +30,8 @@ class Tsuri
     @data     = data or {}
     @id       = id or this._nodeId(@parent)
     @children = []
+
+    @parent.children.push(this) if @parent
 
   find: (finder) ->
     return null unless typeof finder is 'function'
@@ -68,7 +70,7 @@ class Tsuri
   root: () ->
     return this if this.isRoot()
 
-    node = this
+    node = this.parent
 
     node = node.parent while node.parent
 
@@ -77,7 +79,7 @@ class Tsuri
   siblings: () ->
     return [] if this.isRoot()
 
-    return (child for child in @parent.children when child.id isnt @id)
+    (child for child in @parent.children when child.id isnt @id)
 
   size: () -> this.toArray().length
 
@@ -86,7 +88,7 @@ class Tsuri
   ####################
 
   appendChild: (data, id) ->
-    @children.push new Tsuri(this, data, id)
+    new Tsuri(this, data, id)
 
     return this
 
@@ -290,6 +292,7 @@ Tsuri.nodeData = (node, childrenAttr = 'children') ->
 
   return data
 
+
 Tsuri.parse = (object, childrenAttr = 'children') ->
   root = null
 
@@ -298,7 +301,6 @@ Tsuri.parse = (object, childrenAttr = 'children') ->
 
     if parent
       newNode = new Tsuri parent, data
-      parent.children.push newNode
     else
       newNode = new Tsuri null, data
       root    = newNode
