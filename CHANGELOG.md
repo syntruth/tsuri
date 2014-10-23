@@ -1,6 +1,9 @@
 # Tsuri Change Log
 
 ## Unreleased
+- Changed `appendChild()` so if the `data` argumment is already a Tsuri instance,
+  then it is added to the `children` property array immediately and has its `parent`
+  property set instead of being passed to the constructor.
 
 ## 1.1.0 - 2014-10-21
 

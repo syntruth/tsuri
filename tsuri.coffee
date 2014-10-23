@@ -20,7 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
-VERSION: 1.1.0
+VERSION: 1.1.1
 ###
 
 class Tsuri
@@ -88,7 +88,11 @@ class Tsuri
   ####################
 
   appendChild: (data, id) ->
-    new Tsuri(this, data, id)
+    if data instanceof Tsuri
+      data.parent = this
+      this.children.push data
+    else
+      new Tsuri(this, data, id)
 
     return this
 
