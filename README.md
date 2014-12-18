@@ -76,15 +76,11 @@ See each method below for an example.
 
 The following public methods are defined on the Tsuri instance object.
 
-`appendChild(data, id = undefined)` => Tsuri object  
+`appendChild(data)` => Tsuri object  
 This will append the data as a Tsuri node to the node object this is called on. If the
 `data` argument is already a Tsuri instance, then it is added to the `children` array
 property immediately and has its `parent` property set correctly, otherwise it is
 passed to the Tsuri constructor.
-
-An optional `id` value can be passed as the ID of the new node, otherwise, the default
-node ID will be assigned. This argument is ignored if the data is already a Tsuri
-instance.
 
 `breadthEach(iterator)` => null  
 This will traverse the tree, starting at the node that this was called on, doing a
