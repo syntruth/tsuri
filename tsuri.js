@@ -31,16 +31,39 @@ VERSION: 1.1.1
 
   Tsuri = (function() {
 
-    function Tsuri(parent, data, id) {
+    function Tsuri(parent, data) {
       this.parent = parent || null;
-      this.depth = this.parent ? this.parent.depth + 1 : 0;
       this.data = data || {};
-      this.id = id || this._nodeId(this.parent);
       this.children = [];
       if (this.parent) {
         this.parent.children.push(this);
       }
+      this.setId();
+      this.setDepth();
     }
+
+    Tsuri.prototype.generateId = function(separator) {
+      var idx, pid;
+      if (separator == null) {
+        separator = '-';
+      }
+      if (!this.parent) {
+        return '0';
+      }
+      pid = this.parent.id;
+      idx = this.parent.children.indexOf(this);
+      return [pid, idx].join(separator);
+    };
+
+    Tsuri.prototype.setId = function() {
+      this.id = this.generateId();
+      return this;
+    };
+
+    Tsuri.prototype.setDepth = function() {
+      this.depth = this.parent ? this.parent.depth + 1 : 0;
+      return this;
+    };
 
     Tsuri.prototype.find = function(finder) {
       var match;
@@ -131,12 +154,51 @@ VERSION: 1.1.1
       return this.toArray().length;
     };
 
-    Tsuri.prototype.appendChild = function(data, id) {
-      if (data instanceof Tsuri) {
-        data.parent = this;
-        this.children.push(data);
+    Tsuri.prototype.hasParent = function() {
+      if (this.parent) {
+        return true;
       } else {
-        new Tsuri(this, data, id);
+        return false;
+      }
+    };
+
+    Tsuri.prototype.removeParent = function() {
+      if (this.hasParent()) {
+        this.parent.removeChild(this);
+      }
+      return this;
+    };
+
+    Tsuri.prototype.setParent = function(data) {
+      if (!(data instanceof Tsuri)) {
+        data = new Tsuri(null, data);
+      }
+      data.appendChild(this);
+      return this;
+    };
+
+    Tsuri.prototype.insertParent = function(node) {
+      var parent;
+      parent = this.parent;
+      if (!(node instanceof Tsuri)) {
+        node = new Tsuri(null, node);
+      }
+      if (parent) {
+        parent.appendChild(node, false);
+      }
+      node.appendChild(this);
+      node.root().updateChildren();
+      return this;
+    };
+
+    Tsuri.prototype.appendChild = function(node, doUpdate) {
+      if (doUpdate == null) {
+        doUpdate = true;
+      }
+      if (node instanceof Tsuri) {
+        this._appendChild(node, doUpdate);
+      } else {
+        new Tsuri(this, node);
       }
       return this;
     };
@@ -153,6 +215,14 @@ VERSION: 1.1.1
 
     Tsuri.prototype.hasChildren = function() {
       return this.children.length > 0;
+    };
+
+    Tsuri.prototype.updateChildren = function() {
+      this.traverseDown(function(node) {
+        node.setId();
+        return node.setDepth();
+      });
+      return this;
     };
 
     Tsuri.prototype.breadthEach = function(iterator) {
@@ -184,8 +254,11 @@ VERSION: 1.1.1
       return nodes;
     };
 
-    Tsuri.prototype.toString = function() {
-      return this._toStringArray(this).join('\n');
+    Tsuri.prototype.toString = function(displayAttr) {
+      if (displayAttr == null) {
+        displayAttr = null;
+      }
+      return this._toStringArray(this, displayAttr).join('\n');
     };
 
     Tsuri.prototype.toJSON = function(childrenAttr, dataHandler) {
@@ -321,6 +394,19 @@ VERSION: 1.1.1
       }
     };
 
+    Tsuri.prototype._appendChild = function(node, doUpdate) {
+      if (doUpdate == null) {
+        doUpdate = true;
+      }
+      node.removeParent();
+      this.children.push(node);
+      node.parent = this;
+      if (doUpdate) {
+        this.updateChildren();
+      }
+      return node;
+    };
+
     Tsuri.prototype._removeChild = function(node) {
       var child, idx, parent, value, _i, _len, _ref;
       parent = node.parent;
@@ -335,26 +421,16 @@ VERSION: 1.1.1
       return value;
     };
 
-    Tsuri.prototype._nodeId = function(parent, separator) {
-      if (separator == null) {
-        separator = '-';
-      }
-      if (parent) {
-        return [parent.id, parent.children.length].join(separator);
-      } else {
-        return '0';
-      }
-    };
-
-    Tsuri.prototype._toStringArray = function(node) {
-      var child, indent, lines, _i, _len, _ref;
+    Tsuri.prototype._toStringArray = function(node, displayAttr) {
+      var child, indent, lines, name, _i, _len, _ref;
       lines = [];
       indent = this._toStringIndent(node.depth);
-      lines.push("" + indent + node.id);
+      name = displayAttr && node.data[displayAttr] ? "" + node.data[displayAttr] + " (" + node.id + ")" : node.id;
+      lines.push("" + indent + name);
       _ref = node.children;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         child = _ref[_i];
-        lines = lines.concat(this._toStringArray(child));
+        lines = lines.concat(this._toStringArray(child, displayAttr));
       }
       return lines;
     };

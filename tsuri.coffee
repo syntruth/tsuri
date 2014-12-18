@@ -24,14 +24,33 @@ VERSION: 1.1.1
 ###
 
 class Tsuri
-  constructor: (parent, data, id) ->
+  constructor: (parent, data) ->
     @parent   = parent or null
-    @depth    = if @parent then @parent.depth + 1 else 0
     @data     = data or {}
-    @id       = id or this._nodeId(@parent)
     @children = []
 
     @parent.children.push(this) if @parent
+
+    this.setId()
+    this.setDepth()
+
+  generateId: (separator = '-') ->
+    return '0' unless @parent
+
+    pid = @parent.id
+    idx = @parent.children.indexOf this
+
+    [pid, idx].join separator
+
+  setId: () ->
+    @id = this.generateId()
+
+    return this
+
+  setDepth: () ->
+    @depth = if @parent then @parent.depth + 1 else 0
+
+    return this
 
   find: (finder) ->
     return null unless typeof finder is 'function'
@@ -83,16 +102,51 @@ class Tsuri
 
   size: () -> this.toArray().length
 
+  ##################
+  # Parent Methods #
+  ##################
+
+  hasParent: () -> if @parent then true else false
+
+  removeParent: () ->
+    @parent.removeChild(this) if this.hasParent()
+
+    return this
+
+  # This sets the parent of this node to a new
+  # parent, creating a new Tsuri node if necessary.
+  setParent: (data) ->
+    data = new Tsuri(null, data) unless data instanceof Tsuri
+
+    data.appendChild this
+
+    return this
+
+  # This inserts another Tsuri node as a parent
+  # of the current node, and assigning the new
+  # parent node as a child of the old parent
+  # node.
+  insertParent: (node) ->
+    parent = @parent
+    node   = new Tsuri(null, node) unless node instanceof Tsuri
+
+    parent.appendChild(node, false) if parent
+
+    node.appendChild(this)
+
+    node.root().updateChildren()
+
+    return this
+
   ####################
   # Children Methods #
   ####################
 
-  appendChild: (data, id) ->
-    if data instanceof Tsuri
-      data.parent = this
-      this.children.push data
+  appendChild: (node, doUpdate = true) ->
+    if node instanceof Tsuri
+      this._appendChild node, doUpdate
     else
-      new Tsuri(this, data, id)
+      new Tsuri(this, node)
 
     return this
 
@@ -105,6 +159,13 @@ class Tsuri
     throw new Error("Invalid argument: #{arg}")
 
   hasChildren: () -> @children.length > 0
+
+  updateChildren: () ->
+    this.traverseDown (node) ->
+      node.setId()
+      node.setDepth()
+
+    return this
 
   #####################
   # Traversal Methods #
@@ -143,7 +204,13 @@ class Tsuri
 
     return nodes
 
-  toString: () -> this._toStringArray(this).join('\n')
+  # This create a string from the tree structure.
+  # If the `displayAttr` is set, and is a key on
+  # the data of the node, then that will be
+  # displayed as the 'name' of the node, otherwise,
+  # the generated ID will be used instead.
+  toString: (displayAttr = null) ->
+    this._toStringArray(this, displayAttr).join('\n')
 
   toJSON: (childrenAttr = 'children', dataHandler) ->
     unless typeof dataHandler is 'function'
@@ -245,6 +312,16 @@ class Tsuri
 
     return
 
+  _appendChild: (node, doUpdate = true) ->
+    node.removeParent()
+    @children.push node
+
+    node.parent = this
+
+    this.updateChildren() if doUpdate
+
+    return node
+
   _removeChild: (node) ->
     parent = node.parent
     value  = null
@@ -254,20 +331,19 @@ class Tsuri
 
     return value
 
-  _nodeId: (parent, separator = '-') ->
-    if parent
-      [parent.id, parent.children.length].join separator
-    else
-      '0'
-
-  _toStringArray: (node) ->
+  _toStringArray: (node, displayAttr) ->
     lines  = []
     indent = this._toStringIndent node.depth
 
-    lines.push "#{indent}#{node.id}"
+    name = if displayAttr and node.data[displayAttr]
+      "#{node.data[displayAttr]} (#{node.id})"
+    else
+      node.id
+
+    lines.push "#{indent}#{name}"
 
     for child in node.children
-      lines = lines.concat this._toStringArray child
+      lines = lines.concat this._toStringArray child, displayAttr
 
     return lines
 

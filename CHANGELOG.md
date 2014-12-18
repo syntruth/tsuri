@@ -1,9 +1,35 @@
 # Tsuri Change Log
 
-## Unreleased
+## 1.1.1 - 2014-12-18
+- Added `insertParent()` method to insert a node between a child and its original
+  parent node, while updating each node's properties (ID and depth) to reflect
+  their new positions.
+- Added `setParent()` as a wrapper to the parent's `appendChild()` method, but it
+  also checks to see if the given argument is a Tsuri instance or not.
+- Added `removeParent()` as a wrapper for removing a node from its parent via a
+  call to the parent's `removeChild()` method.
+- Added `hasParent()` to DRY up parent checks.
+- Added `updateChildren()` to traverse the tree starting with the current node and
+  updating the ID and Depth of the node's children.
+- Added `generateId()`, `setId()`, and `setDepth()` methods to handle setting the
+  ID and depth properties outside of the constructor, so they can be called later
+  on to update those properties post-instatiation.
+  now always generated with a node is added, or moved within the tree.
+- Added `hasParent()` that returns a boolean on if the node has a parent or not.
+
+### Changed
+- Updated the `toString()` method to take an optional argument, `displayAttr`, that
+  if set to a key on the node's `data` property, will insert that key's value into
+  the node's string representation, with the node's ID after it within parenthesis.
+- Changed `appendChild()` to have a new, optional argument `doUpdate`, which if
+  set to true (the default), then the parent node's `updateChildren()` method 
+  will be called.
 - Changed `appendChild()` so if the `data` argumment is already a Tsuri instance,
-  then it is added to the `children` property array immediately and has its `parent`
-  property set instead of being passed to the constructor.
+  it is handled more directly in a private method, so that it is added to the
+  parent's `children` array and has its properties set correctly.
+
+### Removed
+- Removed the `id` argument from the constructor and related methods. All IDs are
 
 ## 1.1.0 - 2014-10-21
 
