@@ -96,7 +96,7 @@ breadth-first, left-to-right traversal of the subtree.
     //    grandchild-1
 
 `each(iterator)` => null  
-This is a synonym for traverseDown() below.
+This is a synonym for `traverseDown()` below.
 
 `find(finder)` => Tsuri instance or null  
 This will find a given node within the (sub)tree node this is called on. The `finder`
@@ -141,10 +141,10 @@ or not.
 `isRoot()` => Boolean  
 Will return if the node this is called on is the root of the tree or not.
 
-`path(path, separator = '/')` => Tsuri instances or null  
+`path(path, separator = '-')` => Tsuri instances or null  
 Finds a node based on a string path of children indexes, separated by the optional
-separator string, which defaults to '/'. In other words, using the above JSON data,
-from the tree root, the path to the `grandchild-1` node would be: 1/0, where 1 is
+separator string, which defaults to '-'. In other words, using the above JSON data,
+from the tree root, the path to the `grandchild-1` node would be: 0-1-0, where 1 is
 the 2nd child of the root node, and 0 is the 1st child of the `child-2` node.
 
 `postOrderEach`(iterator) => null  
@@ -202,7 +202,7 @@ in the tree are towards the end of the array.
 
 `toJSON(childrenAttr, dataHandler)` => Object  
 This will return a JSON object representation of the tree; it is sort of the
-opposite of Tsuri.parse(). The `childrenAttr` tells the method what attribute
+opposite of `Tsuri.parse()`. The `childrenAttr` tells the method what attribute
 to use for the children array, and defaults to 'children'. The dataHandler is an
 optional function so you can massage how the data is returned. This function
 *_must_* return an Object. If left undefined, a default data handler is used which

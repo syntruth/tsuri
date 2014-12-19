@@ -69,7 +69,7 @@ class Tsuri
 
   isRoot: () -> if @parent then false else true
 
-  path: (path, separator = '/') ->
+  path: (path, separator = '-') ->
     path    = path.substring(1) if path[0] is separator
     indexes = path.split separator
     context = this

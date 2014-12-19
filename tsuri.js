@@ -99,7 +99,7 @@ VERSION: 1.1.1
     Tsuri.prototype.path = function(path, separator) {
       var context, index, indexes, _i, _len, _ref;
       if (separator == null) {
-        separator = '/';
+        separator = '-';
       }
       if (path[0] === separator) {
         path = path.substring(1);
