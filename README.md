@@ -76,11 +76,13 @@ See each method below for an example.
 
 The following public methods are defined on the Tsuri instance object.
 
-`appendChild(data)` => Tsuri object  
-This will append the data as a Tsuri node to the node object this is called on. If the
-`data` argument is already a Tsuri instance, then it is added to the `children` array
+`appendChild(node, doUpdate)` => Tsuri object  
+This will append the node as a Tsuri node to the node object this is called on. If the
+`node` argument is already a Tsuri instance, then it is added to the `children` array
 property immediately and has its `parent` property set correctly, otherwise it is
-passed to the Tsuri constructor.
+passed to the Tsuri constructor. The `doUpdate` argument is optional; if set to true
+(the default), then `updateChildren()` will be called after the child is added,
+otherwise, nothing more will be done.
 
 `breadthEach(iterator)` => null  
 This will traverse the tree, starting at the node that this was called on, doing a
@@ -112,8 +114,25 @@ The finder function should return true or false on if the node matches what you 
 looking for in the tree. If found, the node will be returned, otherwise null will
 be returned. If no finder function is given, then null is returned.
 
+`generateId(separator)` => String  
+This will generate an ID string for a given Tsuri node, based on the node's
+parent and the index of the node with its parent's `children` array. If the
+node has no parent, then '0' is returned. The `separator` argument is optional
+and is used to separate the ID parts; it defaults to a dash '-' character.
+
 `hasChildren()` => Boolean  
 Returns true if the given node has children, false otherwise.
+
+`hasParent()` => Boolean  
+Returns true if the Tsuri instance has a parent, otherwise false.
+
+`insertParent(node)` => Tsuri instance  
+This inserts another Tsuri node as a parent of the current node, and
+assigning the new parent node as a child of the old parent node. The
+`node` argument can either be another Tsuri instance or a data object
+that will be used to instantiate the Tsuri instance. **Note:** this
+forces a call to `updateChildren()` on the root node, so for large trees
+could become a costly procedure.
 
 `isLeaf()` => Boolean  
 Will return if this node is a leaf or not; that is, if it has any children
@@ -152,6 +171,22 @@ This will remove a child node from the node this is called upon. The `node`
 argument can either be a Tsuri instance or an integer representing the indexed
 position of the node within its parents children array.
 
+`removeParent()` => Tsuri instance  
+This is a wrapper to remove the called Tsuri instance from its parent if that
+node actually has a parent. It returns the called instance.
+
+`setDepth()` => Tsuri instance  
+This sets the `depth` property on the Tsuri instance, based on its parent's
+depth or to 0 if there is no parent.
+
+`setId()` => Tsuri instance  
+This sets the `id` property of the Tsuri instance, by calling `generateId()`.
+
+`setParent(node)` => Tsuri instance  
+This sets the parent of the Tsuri instance it is called on to the argument
+given as `node`. The argument can either be a Tsuri instance or a data object
+that will be turned into a Tsuri instance.
+
 `siblings()` => [Tsuri instances] or []  
 This will return an array of nodes that are siblings of the node that this is
 called on, or if this node has no siblings, an empty array.
@@ -173,8 +208,11 @@ optional function so you can massage how the data is returned. This function
 *_must_* return an Object. If left undefined, a default data handler is used which
 simply returns node.data.
 
-`toString()` => String  
+`toString(displayAttr)` => String  
 This returns a string representation of the tree, with the IDs listed for each node.
+If the optional `displayAttr` argument is set to a key on the node's `data` property,
+then the value for that key will be inserted before the ID in the output; the ID will
+then be wrapped in parenthesis.
 
     tree.toString()
 
@@ -205,3 +243,9 @@ node in turn. This is a depth-first, left-to-right traversal.
     //    child-2
     //    grandchild-1
 
+`updateChildren()` => Tsuri instance  
+This will traverse down the tree, starting with the node this is called on, and
+updates the `id` and `depth` properties of each node. This needs to be called if
+nodes are shuffled around in regards to the parent/child relationships. This
+method is called by other built-in methods that do any reassigning of nodes, such
+as `insertParent()`.

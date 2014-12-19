@@ -8,7 +8,6 @@
   also checks to see if the given argument is a Tsuri instance or not.
 - Added `removeParent()` as a wrapper for removing a node from its parent via a
   call to the parent's `removeChild()` method.
-- Added `hasParent()` to DRY up parent checks.
 - Added `updateChildren()` to traverse the tree starting with the current node and
   updating the ID and Depth of the node's children.
 - Added `generateId()`, `setId()`, and `setDepth()` methods to handle setting the
@@ -30,11 +29,12 @@
 
 ### Removed
 - Removed the `id` argument from the constructor and related methods. All IDs are
+  now auto-generated.
 
 ## 1.1.0 - 2014-10-21
 
 ### Changed
-- Updated `Tsuri.parse()` fort he change to the constructor and `appendChild()`.
+- Updated `Tsuri.parse()` for the change to the constructor and `appendChild()`.
 - `appendChild()` no longer directly adds the new child node to the parent, as that
   is now handled in the constructor.
 - Changed the constructor to add the intializing node to the `parent` node if it's
